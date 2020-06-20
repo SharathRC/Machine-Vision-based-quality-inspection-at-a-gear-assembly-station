@@ -1,10 +1,13 @@
-version: "3.7"
-# version: '2.3'
+# version: "3.7"
+version: '2.3'
 services:
   darknet:
     image: thesis/darknet:latest
     build:
       context: ../
       dockerfile: ./build/darknet.Dockerfile
-    # runtime: nvidia
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ../custom/:/darknet/custom
+    runtime: nvidia
     command: sleep infinity
