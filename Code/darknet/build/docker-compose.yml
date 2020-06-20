@@ -6,6 +6,9 @@ services:
     build:
       context: ../
       dockerfile: ./build/darknet.Dockerfile
+    environment:
+      - "QT_X11_NO_MITSHM=1"
+      - "DISPLAY"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ../custom/:/darknet/custom
