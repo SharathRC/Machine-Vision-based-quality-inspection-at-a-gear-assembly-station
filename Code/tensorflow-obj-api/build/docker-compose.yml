@@ -2,10 +2,10 @@
 version: '2.3'
 services:
   tensorflow-obj-api:
-    image: thesis/tensorflow-obj-api:latest
+    image: tf-obj-api:latest
     build:
       context: ../
-      dockerfile: ./build/tensorflow-obj-api.Dockerfile
+      dockerfile: ./build/tf-obj-api.Dockerfile
     environment:
       - PYTHONPATH=:/tensorflow/models/research:/tensorflow/models/research/slim
 
