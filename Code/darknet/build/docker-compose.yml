@@ -2,7 +2,7 @@
 version: '2.3'
 services:
   darknet:
-    image: darknet:latest
+    image: collaborating.tuhh.de:5005/cmx8665/master-thesis/darknet:latest
     build:
       context: ../
       dockerfile: ./build/darknet.Dockerfile

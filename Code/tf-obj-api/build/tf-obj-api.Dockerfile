@@ -52,7 +52,3 @@ RUN mkdir -p images/test
 RUN mkdir -p images/train
 RUN mkdir pre-trained-model
 RUN mkdir training
-
-
-
-

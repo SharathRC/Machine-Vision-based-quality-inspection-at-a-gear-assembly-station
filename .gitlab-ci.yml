@@ -1,0 +1,10 @@
+test:
+    stage: test
+    script:
+        - apt-get update -y
+        - docker-compose -f Code/darknet/build/docker-compose.yml build --no-cache
+        - docker-compose -f Code/tf-obj-api/build/docker-compose.yml buils --no-cache
+        - docker-compose -f Code/darknet/build/docker-compose.yml push
+        - docker-compose -f Code/tf-obj-api/build/docker-compose.yml push
+    only:
+        - master

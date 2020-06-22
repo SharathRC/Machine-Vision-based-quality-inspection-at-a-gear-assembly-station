@@ -2,7 +2,7 @@
 version: '2.3'
 services:
   tensorflow-obj-api:
-    image: tf-obj-api:latest
+    image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf-obj-api:latest
     build:
       context: ../
       dockerfile: ./build/tf-obj-api.Dockerfile
