@@ -5,10 +5,11 @@ import pathlib
 from random import shuffle
 import numpy as np
 
-# os.chdir(os.path.dirname(__file__))
-# path = os.getcwd()
+os.chdir(os.path.dirname(__file__))
+path = os.getcwd()
+print(path)
 
-folder_path = '../darknet/custom/images'
+folder_path = '../../volumes/images'
 num_classes = 2
 
 all_classes_imgs = []
@@ -36,9 +37,10 @@ shuffle(trainfiles)
 shuffle(valfiles)
 
 add_path = '/darknet/custom/images'
-# write_path = '../volumes'
+add_path = '../../volumes/images'
+write_path = '../../volumes'
 # write_path = 'finetune_alexnet_with_tensorflow/gear_objects'
-write_path = '../darknet/custom'
+# write_path = '../darknet/custom'
 
 with open(f'{write_path}/train.txt', 'w') as f:
     for filename in trainfiles:
