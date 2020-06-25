@@ -1,0 +1,15 @@
+version: '2.3'
+services:
+    pytorch:
+        image: collaborating.tuhh.de:5005/cmx8665/master-thesis/pytorch:latest
+        build:
+            context: ../
+            dockerfile: ./build/pytorch.Dockerfile
+        environment:
+            - "QT_X11_NO_MITSHM=1"
+            - "DISPLAY"
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            # - ../custom/:/pytorch/custom
+        runtime: nvidia
+        command: sleep infinity
