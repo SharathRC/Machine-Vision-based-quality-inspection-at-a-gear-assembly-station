@@ -23,27 +23,27 @@ from PIL import Image
 from object_detection.utils import dataset_util
 from collections import namedtuple, OrderedDict
 
-flags = tf.app.flags
-flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
-flags.DEFINE_string('label', '', 'Name of class label')
+# flags = tf.app.flags
+# flags.DEFINE_string('output_path', '', 'Path to output TFRecord')
+# flags.DEFINE_string('label', '', 'Name of class label')
 # if your image has more labels input them as
 # flags.DEFINE_string('label0', '', 'Name of class[0] label')
 # flags.DEFINE_string('label1', '', 'Name of class[1] label')
 # and so on.
-flags.DEFINE_string('img_path', '', 'Path to images')
-FLAGS = flags.FLAGS
+# flags.DEFINE_string('img_path', '', 'Path to images')
+# FLAGS = flags.FLAGS
 
-
+class_names = ['complete', 'incomplete']
 # TO-DO replace this with label map
 # for multiple labels add more else if statements
 def class_text_to_int(row_label):
-    if row_label == FLAGS.label:  # 'ship':
-        return 1
+    # if row_label == FLAGS.label:  # 'ship':
+    #     return 1
     # comment upper if statement and uncomment these statements for multiple labelling
-    # if row_label == FLAGS.label0:
-    #   return 1
-    # elif row_label == FLAGS.label1:
-    #   return 0
+    if row_label == class_names[0]:
+      return 1
+    elif row_label == class_names[1]:
+      return 2
     else:
         None
 
@@ -96,17 +96,16 @@ def create_tf_example(group, path):
     return tf_example
 
 
-def main(_):
+def main():
     # path = os.path.join(os.getcwd(), FLAGS.img_path)
-    path = '../../volumes/images'
-    csv_input = '../../volumes/train_labels.csv'
-    output_path = '../../volumes/train.record'
-
+    data_set = 'test'
+    path = '../images'
+    csv_input = f'../annotations/{data_set}_labels.csv'
+    output_path = f'../annotations/{data_set}.record'
     writer = tf.python_io.TFRecordWriter(output_path)
 
     examples = pd.read_csv(csv_input)
     grouped = split(examples, 'filename')
-    print(grouped)
     for group in grouped:
         tf_example = create_tf_example(group, path)
         writer.write(tf_example.SerializeToString())
@@ -116,4 +115,5 @@ def main(_):
 
 
 if __name__ == '__main__':
-    tf.app.run()
+    # tf.app.run()
+    main()

@@ -6,3 +6,4 @@
 *.xml
 
 *.weights
+*.record
