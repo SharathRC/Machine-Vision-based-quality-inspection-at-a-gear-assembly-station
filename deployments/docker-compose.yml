@@ -1,0 +1,47 @@
+# version: "3.7"
+version: '2.3'
+
+services:
+    darknet:
+        image: collaborating.tuhh.de:5005/cmx8665/master-thesis/darknet:latest
+        build:
+            context: ../
+            dockerfile: ./code/darknet/build/darknet.Dockerfile
+        environment:
+            - "QT_X11_NO_MITSHM=1"
+            - "DISPLAY"
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - ../code/darknet/custom/:/darknet/custom
+            - ../volumes/images/:/darknet/custom/images
+        runtime: nvidia
+        command: sleep infinity
+
+    tf-obj-api:
+        image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf-obj-api:latest
+        build:
+            context: ../
+            dockerfile: ./code/tf-obj-api/build/tf-obj-api.Dockerfile
+        environment:
+            - PYTHONPATH=:/tensorflow/models/research:/tensorflow/models/research/slim
+
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - ../code/tf-obj-api/training_custom/:/tensorflow/workspace/training_custom
+            - ../volumes/images/:/tensorflow/workspace/training_custom/images
+        runtime: nvidia
+        command: sleep infinity
+    
+    pytorch:
+        image: collaborating.tuhh.de:5005/cmx8665/master-thesis/pytorch:latest
+        build:
+            context: ../
+            dockerfile: ./code/pytorch/build/pytorch.Dockerfile
+        environment:
+            - "QT_X11_NO_MITSHM=1"
+            - "DISPLAY"
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            # - ../custom/:/pytorch/custom
+        runtime: nvidia
+        command: sleep infinity

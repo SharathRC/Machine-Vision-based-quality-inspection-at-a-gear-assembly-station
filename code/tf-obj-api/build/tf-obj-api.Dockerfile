@@ -44,11 +44,13 @@ RUN pip3 install --upgrade tf_slim
 
 RUN python3 setup.py install
 
+RUN pip3 install pandas
+
 RUN cd
 RUN mkdir -p /tensorflow/workspace/training_custom
 WORKDIR /tensorflow/workspace/training_custom
-RUN mkdir annotations
-RUN mkdir -p images/test
-RUN mkdir -p images/train
-RUN mkdir pre-trained-model
-RUN mkdir training
+# RUN mkdir annotations
+# RUN mkdir -p images/test
+# RUN mkdir -p images/train
+# RUN mkdir pre-trained-model
+# RUN mkdir training

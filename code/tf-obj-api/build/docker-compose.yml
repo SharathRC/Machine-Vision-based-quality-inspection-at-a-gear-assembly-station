@@ -1,7 +1,7 @@
 # version: "3.7"
 version: '2.3'
 services:
-  tensorflow-obj-api:
+  tf-obj-api:
     image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf-obj-api:latest
     build:
       context: ../
@@ -11,6 +11,7 @@ services:
 
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
-      # - ../custom/:/darknet/custom
+      - ../training_custom/:/tensorflow/workspace/training_custom
+      - ../../../volumes/images/:/tensorflow/workspace/training_custom/images
     runtime: nvidia
     command: sleep infinity
