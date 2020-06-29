@@ -99,9 +99,9 @@ def create_tf_example(group, path):
 def main():
     # path = os.path.join(os.getcwd(), FLAGS.img_path)
     data_set = 'test'
-    path = '../images'
-    csv_input = f'../annotations/{data_set}_labels.csv'
-    output_path = f'../annotations/{data_set}.record'
+    path = '/tensorflow/workspace/training_custom/images'
+    csv_input = f'/tensorflow/workspace/training_custom/annotations/{data_set}_labels.csv'
+    output_path = f'/tensorflow/workspace/training_custom/annotations/{data_set}.record'
     writer = tf.python_io.TFRecordWriter(output_path)
 
     examples = pd.read_csv(csv_input)
