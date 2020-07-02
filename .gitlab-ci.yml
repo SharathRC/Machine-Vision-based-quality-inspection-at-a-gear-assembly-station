@@ -1,4 +1,4 @@
-test:
+test-build-images:
     stage: test
     script:
         - apt-get update -y
