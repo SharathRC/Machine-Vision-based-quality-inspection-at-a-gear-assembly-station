@@ -8,7 +8,6 @@ services:
       dockerfile: ./build/tf-obj-api.Dockerfile
     environment:
       - PYTHONPATH=:/tensorflow/models/research:/tensorflow/models/research/slim
-
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ../training_custom/:/tensorflow/workspace/training_custom

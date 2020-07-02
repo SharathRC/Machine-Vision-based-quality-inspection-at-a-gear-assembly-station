@@ -1,0 +1,17 @@
+# version: "3.7"
+version: '2.3'
+
+services:
+  tf2:
+    image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf2:latest
+    build:
+        context: ../
+        dockerfile: ./build/tf2.Dockerfile
+    # environment:
+    #     - PYTHONPATH=:/tensorflow/models/research:/tensorflow/models/research/slim
+    volumes:
+        - /tmp/.X11-unix:/tmp/.X11-unix:rw
+        # - ../../../volumes/images/:/tensorflow/workspace/training_custom/images
+        - ../custom/:/custom
+    runtime: nvidia
+    command: sleep infinity

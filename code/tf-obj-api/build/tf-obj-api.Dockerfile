@@ -18,6 +18,8 @@ RUN apt-get -y update && apt-get -y install \
     python3-lxml \
     python3-tk
 
+RUN python3 -m pip install --upgrade pip
+
 # pip dependencies
 RUN pip3 install futures grpcio grpcio-tools
 
