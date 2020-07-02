@@ -6,5 +6,5 @@ test-build-images:
         - docker-compose -f Code/tf-obj-api/build/docker-compose.yml buils --no-cache
         - docker-compose -f Code/darknet/build/docker-compose.yml push
         - docker-compose -f Code/tf-obj-api/build/docker-compose.yml push
-    only:
-        - master
+   # only:
+    #    - master
