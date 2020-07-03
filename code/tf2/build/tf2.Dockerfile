@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.0.0a0-gpu-py3
+FROM tensorflow/tensorflow:2.0.0-gpu-py3
 ARG DEBIAN_FRONTEND=noninteractive
 
 # install dependencies
@@ -25,10 +25,11 @@ RUN pip3 install futures grpcio grpcio-tools
 
 # RUN pip3 install tensorflow-gpu
 
-RUN pip3 install \
+RUN pip3 install --upgrade \
     Cython \
     contextlib2 \
     matplotlib \
     tf_slim \
     numpy \
-    opencv-python
+    opencv-python \
+    tensorflow_datasets

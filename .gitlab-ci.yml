@@ -1,5 +1,6 @@
 before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u cmx8665 -p Hh4J9a58MwPEhARtRxCg $CI_REGISTRY
 
 test-build-images:
     stage: test
