@@ -32,4 +32,5 @@ RUN pip3 install --upgrade \
     tf_slim \
     numpy \
     opencv-python \
-    tensorflow_datasets
+    tensorflow_datasets \
+    scipy

@@ -1,7 +1,9 @@
+import sys
 import os
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+
 
 import tensorflow_datasets as tfds
 tfds.disable_progress_bar()
@@ -17,12 +19,9 @@ print(raw_train)
 print(raw_validation)
 print(raw_test)
 
-get_label_name = metadata.features['label'].int2str
+sys.exit()
 
-for image, label in raw_train.take(2):
-  plt.figure()
-  plt.imshow(image)
-  plt.title(get_label_name(label))
+get_label_name = metadata.features['label'].int2str
 
 IMG_SIZE = 160 # All images will be resized to 160x160
 
