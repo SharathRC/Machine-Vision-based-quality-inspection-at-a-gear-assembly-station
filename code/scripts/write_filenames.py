@@ -5,7 +5,7 @@ import pathlib
 from random import shuffle
 import numpy as np
 
-os.chdir(os.path.dirname(__file__))
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 path = os.getcwd()
 print(path)
 
@@ -16,7 +16,15 @@ all_classes_imgs = []
 for _ in range(num_classes):
     all_classes_imgs.append([])
 
-for path in pathlib.Path(folder_path).iterdir():
+data_dir = pathlib.Path(folder_path)
+img_list = list(data_dir.glob('*/*.jpg'))
+image_count = len(img_list)
+
+CLASS_NAMES = np.array([item.name for item in data_dir.glob('*') if item.name != "LICENSE.txt"])
+print(CLASS_NAMES)
+
+
+for path in img_list:
     img_name = str(path).split("/")[-1]
     # print(img_name)
     if img_name.endswith('jpg'):
@@ -37,24 +45,22 @@ shuffle(trainfiles)
 shuffle(valfiles)
 
 add_path = '/darknet/custom/images'
-add_path = '../../volumes/images'
+# add_path = '../../volumes/images'
 write_path = '../../volumes'
 # write_path = 'finetune_alexnet_with_tensorflow/gear_objects'
 # write_path = '../darknet/custom'
 
 with open(f'{write_path}/train.txt', 'w') as f:
     for filename in trainfiles:
-        class_id = filename.split('_')[0]
-        f.write(f'{add_path}/{filename}\n')
+        class_id = int(filename.split('_')[0])
+        f.write(f'{add_path}/{CLASS_NAMES[class_id]}/{filename}\n')
 
 with open(f'{write_path}/val.txt', 'w') as f:
     for filename in valfiles:
-        class_id = filename.split('_')[0]
-        f.write(f'{add_path}/{filename}\n')
+        class_id = int(filename.split('_')[0])
+        f.write(f'{add_path}/{CLASS_NAMES[class_id]}/{filename}\n')
 
 # with open(f'{write_path}/test.txt', 'w') as f:
 #     for filename in onlyfiles:
-#         class_id = filename.split('_')[0]
-#         f.write(f'{add_path}/{filename}\n')
-
-
+#         class_id = int(filename.split('_')[0])
+#         f.write(f'{add_path}/{CLASS_NAMES[class_id]}/{filename}\n')
