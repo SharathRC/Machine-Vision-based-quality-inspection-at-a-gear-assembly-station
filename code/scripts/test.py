@@ -1,10 +1,14 @@
-import numpy as np
+import os
+os.chdir(os.path.dirname(__file__))
+print(os.getcwd())
 
+with open('../../volumes/train.txt', 'r') as f:
+    img_paths = []
+    labels = []
+    for path in f.readlines():
+        img_paths.append(path[:-1])
+        label = int(path.split('/')[-1].split('_')[0])
+        labels.append(label)
+    f.close()
 
-a = '../sfds.dssfsd.dsfa.txt'
-print(a)
-
-a = a.split('.')[0:-1]
-
-a = '.'.join(a) + '.jpg'
-print(a)
+print(img_paths)

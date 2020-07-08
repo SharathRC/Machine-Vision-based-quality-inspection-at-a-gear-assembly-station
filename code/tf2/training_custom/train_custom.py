@@ -2,76 +2,62 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+from tensorflow import keras as tk
 
 import tensorflow_datasets as tfds
-tfds.disable_progress_bar()
 
-import load_images
+from efficientnet.tfkeras import EfficientNetB0, EfficientNetB1, EfficientNetB2
 
-train_batches, IMG_SIZE = load_images.get_ds()
 
-# train_batches = train.shuffle(SHUFFLE_BUFFER_SIZE).batch(BATCH_SIZE)
-# validation_batches = validation.batch(BATCH_SIZE)
-# test_batches = test.batch(BATCH_SIZE)
 
-for image_batch, label_batch in train_batches.take(1):
-   pass
+IMAGE_HEIGHT = 255
+IMAGE_WIDTH = 255
+NumClasses = 2
 
-image_batch.shape
 
-IMG_SHAPE = (IMG_SIZE, IMG_SIZE, 3)
+def get_efficient_model():
+    base_model = EfficientNetB2(
+        input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 3),
+        include_top=False,
+        weights="imagenet"
+    )
 
-# Create the base model from the pre-trained model MobileNet V2
-base_model = tf.keras.applications.MobileNetV2(input_shape=IMG_SHAPE,
-                                               include_top=False,
-                                               weights='imagenet')
+    input_layer = tk.layers.Input(shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 3))
+    base_model = base_model(input_layer)
 
-feature_batch = base_model(image_batch)
-print(feature_batch.shape)
+    maxpool = tk.layers.GlobalMaxPooling2D()(base_model)
+    avgpool = tk.layers.GlobalAveragePooling2D()(base_model)
 
-base_model.trainable = False
-base_model.summary()
+    features_maxpool = tk.layers.Dense(20)(maxpool)
+    features_maxpool = tk.layers.LeakyReLU()(features_maxpool)
+    features_maxpool = tk.layers.Dropout(0.25)(features_maxpool)
 
-global_average_layer = tf.keras.layers.GlobalAveragePooling2D()
-feature_batch_average = global_average_layer(feature_batch)
-print(feature_batch_average.shape)
+    features_avgpool = tk.layers.Dense(20)(avgpool)
+    features_avgpool = tk.layers.LeakyReLU()(features_avgpool)
+    features_avgpool = tk.layers.Dropout(0.25)(features_avgpool)
 
-prediction_layer = tf.keras.layers.Dense(1)
-prediction_batch = prediction_layer(feature_batch_average)
-print(prediction_batch.shape)
+    x = tk.layers.Concatenate(axis=-1)([features_maxpool, features_avgpool])
+    x = tk.layers.Dense(NumClasses)(x)
 
-model = tf.keras.Sequential([
-  base_model,
-  global_average_layer,
-  prediction_layer
-])
+    model = tk.Model(inputs=input_layer, outputs=x, name="max_avg_pool")
 
-base_learning_rate = 0.0001
-model.compile(optimizer=tf.keras.optimizers.RMSprop(lr=base_learning_rate),
-              loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
-              metrics=['accuracy'])
+    # model = tk.Sequential()
+    # model.add(base_model)
+    # model.add(tk.layers.Flatten())
+    # model.add(tk.layers.BatchNormalization())
+    # model.add(tk.layers.Dense(20))
+    # model.add(tk.layers.BatchNormalization())
+    # model.add(tk.layers.LeakyReLU())
+    # model.add(tk.layers.Dropout(0.5))
+    # model.add(tk.layers.Dense(NumClasses))
+    # model.add(tk.layers.Softmax())
 
-model.summary()
+    model.compile(
+        loss=tk.losses.CategoricalCrossentropy(from_logits=True),
+        optimizer=tk.optimizers.Adam(learning_rate=4e-5),
+        metrics=["acc"]
+    )
 
-len(model.trainable_variables)
+    return model, base_model
 
-initial_epochs = 10
-validation_steps=20
 
-# loss0,accuracy0 = model.evaluate(validation_batches, steps = validation_steps)
-
-# print("initial loss: {:.2f}".format(loss0))
-# print("initial accuracy: {:.2f}".format(accuracy0))
-
-# history = model.fit(train_batches,
-#                     epochs=initial_epochs,
-#                     validation_data=validation_batches)
-
-history = model.fit(train_batches,
-                    epochs=initial_epochs)
-
-acc = history.history['accuracy']
-val_acc = history.history['val_accuracy']
-
-loss = history.history['loss']
-val_loss = history.history['val_loss']
