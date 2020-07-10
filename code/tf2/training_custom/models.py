@@ -1,22 +1,12 @@
-import os
-import numpy as np
-import matplotlib.pyplot as plt
+
 import tensorflow as tf
 from tensorflow import keras as tk
 
-import tensorflow_datasets as tfds
-
-from efficientnet.tfkeras import EfficientNetB0, EfficientNetB1, EfficientNetB2
+# from efficientnet.tfkeras import EfficientNetB0, EfficientNetB1, EfficientNetB2
 
 
-
-IMAGE_HEIGHT = 255
-IMAGE_WIDTH = 255
-NumClasses = 2
-
-
-def get_efficient_model():
-    base_model = EfficientNetB2(
+def get_efficientnet_model(IMAGE_HEIGHT, IMAGE_WIDTH, NumClasses):
+    base_model = tf.keras.applications.EfficientNetB2(
         input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 3),
         include_top=False,
         weights="imagenet"
@@ -60,4 +50,5 @@ def get_efficient_model():
 
     return model, base_model
 
-
+def get_resnet18_model(IMAGE_HEIGHT, IMAGE_WIDTH, NumClasses):
+    pass

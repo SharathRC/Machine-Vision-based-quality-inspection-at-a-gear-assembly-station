@@ -1,4 +1,5 @@
 import os
+import sys
 import cv2
 import numpy as np
 import argparse
@@ -6,11 +7,18 @@ import tensorflow as tf
 from tensorflow import keras as tk
 from functools import partial
 
-from load_dataset import get_train_ds, get_val_ds
-from util.util_date import get_date_time_str
+from load_dataset import DataLoader
+
+from models import get_efficientnet_model
 
 IMAGE_HEIGHT = 400
 IMAGE_WIDTH = 400
+
+import time
+
+
+def get_date_time_str() -> str:
+    return time.strftime("%Y-%m-%d_%H.%M.%S", time.localtime())
 
 
 
@@ -75,30 +83,38 @@ def eval_failures(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--datadir", type=str, required=True)
-    parser.add_argument("--savedir", type=str, required=True)
-    parser.add_argument("--epochs", type=int, default=15)
-    args = parser.parse_args()
 
-    data_dir = '/workspace/images'
-    save_dir = '/workspace/weights'
+    data_dir = '/workspace/training_custom/images'
+    save_dir = '/workspace/training_custom/weights'
     if not os.path.exists(save_dir):
       os.makedirs(save_dir)
-      
-    ds_train = get_train_ds(data_dir)
+    
+    IMG_H = 225
+    IMG_W = 225
+    NUM_CLASSES = 2
+    EPOCHS = 10
+
+    dl = DataLoader(img_h=IMG_H, img_w=IMG_W, num_classes=NUM_CLASSES)
+
+    train_file_path = '/workspace/training_custom/train.txt'
+    val_file_path = '/workspace/training_custom/val.txt'
+    test_file_path = '/workspace/training_custom/test.txt'
+
+    ds_train, ds_val, ds_test = dl.get_all_datasets(train_file=train_file_path, \
+                                                    val_file=val_file_path)
     ds_train = ds_train.shuffle(buffer_size=100)
     # ds_train = ds_train.map(augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
     ds_train = ds_train.batch(16)
     ds_train = ds_train.prefetch(64)
 
-    ds_val = get_val_ds(data_dir)
+    ds_eval_failures = ds_val
     ds_val = ds_val.batch(16)
 
-    ds_eval_failures = get_val_ds(data_dir)
     ds_eval_failures = ds_eval_failures.batch(8)
 
-    model, base_model = get_efficientnet_model()
+    # print(ds_train)
+    # sys.exit()
+    model, base_model = get_efficientnet_model(IMAGE_HEIGHT=IMG_H, IMAGE_WIDTH=IMG_W, NumClasses=NUM_CLASSES)
     model.summary()
 
     logpath = os.path.join(save_dir, "efficientnet", "b2", model.name, get_date_time_str())
@@ -127,7 +143,7 @@ if __name__ == "__main__":
     model.fit(
         ds_train,
         validation_data=ds_val,
-        epochs=args.epochs,
+        epochs=EPOCHS,
         callbacks=[
             tk.callbacks.ReduceLROnPlateau(patience=2, factor=0.8, min_delta=2e-3),
             callback_tb,
@@ -168,7 +184,7 @@ if __name__ == "__main__":
     # model.fit(
     #     ds_train,
     #     validation_data=ds_val,
-    #     epochs=args.epochs,
+    #     epochs=EPOCHS,
     #     initial_epoch=history.epoch[-1],
     #     callbacks=[
     #         tk.callbacks.ReduceLROnPlateau(patience=2, factor=0.8, min_delta=1e-3),

@@ -56,6 +56,6 @@ services:
         volumes:
             - /tmp/.X11-unix:/tmp/.X11-unix:rw
             - ../code/tf2/training_custom/:/workspace/training_custom
-            - ../volumes/images/:/workspace/images
+            - ../volumes/images/:/workspace/training_custom/images
         runtime: nvidia
         command: sleep infinity

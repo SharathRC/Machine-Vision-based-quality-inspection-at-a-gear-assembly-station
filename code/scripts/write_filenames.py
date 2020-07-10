@@ -44,7 +44,8 @@ for i in range(len(all_classes_imgs)):
 shuffle(trainfiles)
 shuffle(valfiles)
 
-add_path = '/darknet/custom/images'
+# add_path = '/darknet/custom/images'
+add_path = '/workspace/training_custom/images'
 # add_path = '../../volumes/images'
 write_path = '../../volumes'
 # write_path = 'finetune_alexnet_with_tensorflow/gear_objects'
