@@ -5,7 +5,7 @@ from tensorflow import keras as tk
 # from efficientnet.tfkeras import EfficientNetB0, EfficientNetB1, EfficientNetB2
 
 
-def get_efficientnet_model(IMAGE_HEIGHT, IMAGE_WIDTH, NumClasses):
+def get_efficientnet_model(IMAGE_HEIGHT, IMAGE_WIDTH, NumClasses, LEARNING_RATE=4e-5):
     base_model = tf.keras.applications.EfficientNetB2(
         input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 3),
         include_top=False,
@@ -44,7 +44,7 @@ def get_efficientnet_model(IMAGE_HEIGHT, IMAGE_WIDTH, NumClasses):
 
     model.compile(
         loss=tk.losses.CategoricalCrossentropy(from_logits=True),
-        optimizer=tk.optimizers.Adam(learning_rate=4e-5),
+        optimizer=tk.optimizers.Adam(learning_rate=LEARNING_RATE),
         metrics=["acc"]
     )
 
@@ -52,3 +52,68 @@ def get_efficientnet_model(IMAGE_HEIGHT, IMAGE_WIDTH, NumClasses):
 
 def get_resnet18_model(IMAGE_HEIGHT, IMAGE_WIDTH, NumClasses):
     pass
+
+def get_alexnet(IMAGE_HEIGHT, IMAGE_WIDTH, NumClasses, LEARNING_RATE):
+    model = tf.keras.Sequential([
+        # layer 1
+        tf.keras.layers.Conv2D(filters=96,
+                               kernel_size=(11, 11),
+                               strides=4,
+                               padding="valid",
+                               activation=tf.keras.activations.relu,
+                               input_shape=(IMAGE_HEIGHT, IMAGE_WIDTH, 3)),
+        tf.keras.layers.MaxPool2D(pool_size=(3, 3),
+                                  strides=2,
+                                  padding="valid"),
+        tf.keras.layers.BatchNormalization(),
+        # layer 2
+        tf.keras.layers.Conv2D(filters=256,
+                               kernel_size=(5, 5),
+                               strides=1,
+                               padding="same",
+                               activation=tf.keras.activations.relu),
+        tf.keras.layers.MaxPool2D(pool_size=(3, 3),
+                                  strides=2,
+                                  padding="same"),
+        tf.keras.layers.BatchNormalization(),
+        # layer 3
+        tf.keras.layers.Conv2D(filters=384,
+                               kernel_size=(3, 3),
+                               strides=1,
+                               padding="same",
+                               activation=tf.keras.activations.relu),
+        # layer 4
+        tf.keras.layers.Conv2D(filters=384,
+                               kernel_size=(3, 3),
+                               strides=1,
+                               padding="same",
+                               activation=tf.keras.activations.relu),
+        # layer 5
+        tf.keras.layers.Conv2D(filters=256,
+                               kernel_size=(3, 3),
+                               strides=1,
+                               padding="same",
+                               activation=tf.keras.activations.relu),
+        tf.keras.layers.MaxPool2D(pool_size=(3, 3),
+                                  strides=2,
+                                  padding="same"),
+        tf.keras.layers.BatchNormalization(),
+        # layer 6
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(units=4096,
+                              activation=tf.keras.activations.relu),
+        tf.keras.layers.Dropout(rate=0.2),
+        # layer 7
+        tf.keras.layers.Dense(units=4096,
+                              activation=tf.keras.activations.relu),
+        tf.keras.layers.Dropout(rate=0.2),
+        # layer 8
+        tf.keras.layers.Dense(units=NumClasses,
+                              activation=tf.keras.activations.softmax)
+    ])
+
+    model.compile(loss=tf.keras.losses.categorical_crossentropy,
+                  optimizer=tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE),
+                  metrics=['accuracy'])
+
+    return model
