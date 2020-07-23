@@ -1,0 +1,17 @@
+# version: "3.7"
+version: '2.3'
+services:
+  darknet:
+    image: collaborating.tuhh.de:5005/cmx8665/master-thesis/darknet:latest
+    build:
+      context: ../
+      dockerfile: ./build/darknet.Dockerfile
+    environment:
+      - "QT_X11_NO_MITSHM=1"
+      - "DISPLAY"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ../custom/:/darknet/custom
+      - ../../../volumes/images/:/darknet/custom/images
+    runtime: nvidia
+    command: sleep infinity

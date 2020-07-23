@@ -1,0 +1,5 @@
+classes= 2
+train  = /darknet/custom/train.txt
+valid  = /darknet/custom/val.txt
+names = /darknet/custom/obj.names
+backup = /darknet/custom/backup/

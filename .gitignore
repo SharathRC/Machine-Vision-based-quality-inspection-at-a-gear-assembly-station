@@ -3,5 +3,15 @@
 *.jpeg
 
 *.txt
+*.xml
 
 *.weights
+*.record
+
+*.index
+*.tfevents.*
+*.trace
+*.data
+
+code/tf2/training_custom/weights/*
+*/__pycache__/*

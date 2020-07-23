@@ -1,10 +1,17 @@
-test:
+before_script:
+    # - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker login -u cmx8665 -p Hh4J9a58MwPEhARtRxCg collaborating.tuhh.de:5005
+
+test-build-images:
     stage: test
     script:
-        - apt-get update -y
-        - docker-compose -f Code/darknet/build/docker-compose.yml build --no-cache
-        - docker-compose -f Code/tf-obj-api/build/docker-compose.yml buils --no-cache
-        - docker-compose -f Code/darknet/build/docker-compose.yml push
-        - docker-compose -f Code/tf-obj-api/build/docker-compose.yml push
-    only:
-        - master
+       # - apt-get update -y
+        - docker-compose -f code/darknet/build/docker-compose.yml build --no-cache
+        # - docker-compose -f code/tf-obj-api/build/docker-compose.yml build --no-cache
+        - docker-compose -f code/tf2/build/docker-compose.yml build --no-cache
+        
+        - docker-compose -f code/darknet/build/docker-compose.yml push
+        # - docker-compose -f code/tf-obj-api/build/docker-compose.yml push
+        - docker-compose -f code/tf2/build/docker-compose.yml push
+    # only:
+    #    - master

@@ -1,0 +1,11 @@
+# version: "3.7"
+version: '2.3'
+
+services:
+  tf2:
+    image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf2:latest
+    build:
+        context: ../
+        dockerfile: ./build/tf2.Dockerfile
+    runtime: nvidia
+    command: sleep infinity
