@@ -9,7 +9,7 @@ from functools import partial
 
 from load_dataset import DataLoader
 
-import models
+from models import Models
 
 # from models import get_efficientnet_model
 
@@ -117,8 +117,8 @@ if __name__ == "__main__":
 
     # print(ds_train)
     # sys.exit()
-    # model, base_model = models.get_efficientnet_model(IMAGE_HEIGHT=IMG_H, IMAGE_WIDTH=IMG_W, NumClasses=NUM_CLASSES, LEARNING_RATE=LEARNING_RATE)
-    model = models.get_alexnet(IMAGE_HEIGHT=IMG_H, IMAGE_WIDTH=IMG_W, NumClasses=NUM_CLASSES, LEARNING_RATE=LEARNING_RATE)
+    # model, base_model = Models.get_efficientnet_model(IMAGE_HEIGHT=IMG_H, IMAGE_WIDTH=IMG_W, NumClasses=NUM_CLASSES, LEARNING_RATE=LEARNING_RATE)
+    model = Models.get_alexnet(IMAGE_HEIGHT=IMG_H, IMAGE_WIDTH=IMG_W, NumClasses=NUM_CLASSES, LEARNING_RATE=LEARNING_RATE)
     model.summary()
 
     # logpath = os.path.join(save_dir, "efficientnet", "b2", model.name, get_date_time_str())
