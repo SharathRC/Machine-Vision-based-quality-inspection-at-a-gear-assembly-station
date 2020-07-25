@@ -11,6 +11,9 @@ from os.path import isfile, join
 # print(os.getcwd(), 'here')
 # os.chdir(os.path.dirname(__file__))
 
+AUGMENT_IMAGES = False
+NUM_CLASSES = 2
+CLASS_NAMES = ['complete', 'incomplete']
 
 def fix_cad_img_size(cad_img, bkg):
     bkg_h, bkg_w, _ = bkg.shape
@@ -99,8 +102,8 @@ def show_img(img):
     cv2.waitKey(0)
 
 def start():
-    cad_img = cv2.imread('../assets/1.png')
-    bkg = cv2.imread('../assets/Backgrounds/bkg (1).jpeg')
+    cad_img = cv2.imread('../volumes/1.png')
+    bkg = cv2.imread('../volumes/Backgrounds/bkg (1).jpeg')
 
     cad_img = crop_cad_img(cad_img)
 
@@ -126,12 +129,16 @@ def add_background(cad_img, bkg):
     cad_img = merge_bkg(cad_gray, cad_img, bkg)
     return cad_img, bb_box
 
-def correct_bb_box(bb_box, h, w):
+def bb_box2list(bb_box, h, w):
     x1 = bb_box.x1
     y1 = bb_box.y1 
     x2 = bb_box.x2
     y2 = bb_box.y2
+    
+    return [x1, y1, x2, y2]
 
+def correct_bb_box(bb_box, h, w):
+    x1, y1, x2, y2 = bb_box[0], bb_box[1], bb_box[2], bb_box[3]
     if x1 < 0:
         x1 = 0
     if y1 < 0:
@@ -150,17 +157,38 @@ def correct_bb_box(bb_box, h, w):
     if y2 > h:
         y2 = h
     
-    return x1, x2, y1, y2
+    return [x1, y1, x2, y2]
 
+def save_img(img, bb_box, filename, class_id):
+    h, w, _ = img.shape
+    x1, y1, x2, y2 = bb_box[0], bb_box[1], bb_box[2], bb_box[3]
+    rel_bb_box_x_center = (x1 + x2)/(2*w)
+    rel_bb_box_y_center = (y1 + y2)/(2*h)
+    rel_bb_box_w = (x2 - x1)/w
+    rel_bb_box_h = (y2 - y1)/h
+
+    img_file = f'{filename}.jpg'
+    text_file = f'{filename}.txt'
+    with open(text_file, 'w') as f:
+        f.write(f'{class_id} {rel_bb_box_x_center} {rel_bb_box_y_center} {rel_bb_box_w} {rel_bb_box_h}')
+        f.close()
+    cv2.imwrite(img_file, img)
 
 def start_folder(bkg_mode=None):
     seq = iaa.Sequential([iaa.Affine(rotate=(-25, 25)),\
                             iaa.AdditiveGaussianNoise(scale=(5, 60)),\
                             iaa.Crop(percent=(0, 0.2))], random_order=True)
 
-    save_directory = '../volumes/augmented'
+    if AUGMENT_IMAGES:
+        save_directory = '../../volumes/augmented'
+    else:
+        save_directory = '../../volumes/added_background'
+    
+    for class_name in CLASS_NAMES:
+        if not os.path.exists(f'{save_directory}/{class_name}'):
+            os.makedirs(f'{save_directory}/{class_name}')
 
-    bkg_folder = f'../volumes/{bkg_mode}'
+    bkg_folder = f'../../volumes/{bkg_mode}'
     
     bkg_type = f'_{bkg_mode}'
     
@@ -169,14 +197,14 @@ def start_folder(bkg_mode=None):
             print(class_id, perspective)
             cad_img_name = f'c{class_id}_p{perspective}'
             try:
-                cad_img_org = cv2.imread(f'../assets/cad_models/{cad_img_name}.png')
+                cad_img_org = cv2.imread(f'../../volumes/cad_models/{cad_img_name}.png')
                 cad_img_org = crop_cad_img(cad_img_org)
             except Exception as e:
                 print(e)
                 continue
             
             count = 0
-            for path in pathlib.Path(save_directory).iterdir():
+            for path in pathlib.Path(f'{save_directory}/{CLASS_NAMES[class_id]}').iterdir():
                 filename = str(path).split("\\")[-1]
                 if path.is_file() and filename.endswith('jpg') and filename.startswith(f'{class_id}'):
                     count += 1
@@ -196,37 +224,35 @@ def start_folder(bkg_mode=None):
                     cad_img = image_resize(cad_img_org, width=resize_width)
                     
                 out_img, bb_box = add_background(cad_img, bkg)
-                out_img = cv2.cvtColor(out_img, cv2.COLOR_BGR2RGB)
-                bbs = [[ia.BoundingBox(x1=bb_box[0], y1=bb_box[1], x2=bb_box[2], y2=bb_box[3])]]
 
-                imgs_and_bbs_set = [seq(image=out_img, bounding_boxes=bbs) for _ in range(8)]
-                for (img, bb_box) in imgs_and_bbs_set:
-                    h, w, _ = img.shape
-                    
-                    bb_box = bb_box[0][0]
-                    x1, x2, y1, y2 = correct_bb_box(bb_box, h, w)
+                if AUGMENT_IMAGES:
+                    out_img = cv2.cvtColor(out_img, cv2.COLOR_BGR2RGB)
+                    bbs = [[ia.BoundingBox(x1=bb_box[0], y1=bb_box[1], x2=bb_box[2], y2=bb_box[3])]]
 
-                    rel_bb_box_x_center = (x1 + x2)/(2*w)
-                    rel_bb_box_y_center = (y1 + y2)/(2*h)
-                    rel_bb_box_w = (x2 - x1)/w
-                    rel_bb_box_h = (y2 - y1)/h
+                    imgs_and_bbs_set = [seq(image=out_img, bounding_boxes=bbs) for _ in range(8)]
+                    for (img, bb_box) in imgs_and_bbs_set:
+                        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+                        h, w, _ = img.shape
+                        
+                        bb_box = bb_box[0][0]
+                        bb_box = bb_box2list(bb_box)
+                        bb_box = correct_bb_box(bb_box, h, w)
 
-                    filename = f'{save_directory}/{class_id}{bkg_type}_{count}'
-                    img_file = f'{filename}.jpg'
-                    text_file = f'{filename}.txt'
-                    with open(text_file, 'w') as f:
-                        f.write(f'{class_id} {rel_bb_box_x_center} {rel_bb_box_y_center} {rel_bb_box_w} {rel_bb_box_h}')
-                        f.close()
+                        filename = f'{save_directory}/{CLASS_NAMES[class_id]}/{class_id}{bkg_type}_{count}'
+                        save_img(img=img, bb_box=bb_box, filename=filename, class_id=class_id)
+                        count+=1
+                else:
+                    h, w, _ = out_img.shape
+                    bb_box = correct_bb_box(bb_box, h, w)
+                    filename = f'{save_directory}/{CLASS_NAMES[class_id]}/{class_id}{bkg_type}_{count}'
+                    save_img(img=out_img, bb_box=bb_box, filename=filename, class_id=class_id)
                     count+=1
-                    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-                    cv2.imwrite(img_file, img)
-
 
 def gen_images():
-    bkg_mode = ['factory', 'concrete', 'metal', 'wood' ]
+    bkg_modes = ['factory', 'concrete', 'metal', 'wood' ]
     # bkg_mode = ['concrete', 'metal', 'wood' ]
-    for i in range(len(bkg_mode)):
-        start_folder(bkg_mode[i])
+    for bkg in bkg_modes:
+        start_folder(bkg)
 
 
 # start_folder('wood')

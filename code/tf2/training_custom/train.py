@@ -6,17 +6,10 @@ import argparse
 import tensorflow as tf
 from tensorflow import keras as tk
 from functools import partial
+import time
 
 from load_dataset import DataLoader
-
 from models import Models
-
-# from models import get_efficientnet_model
-
-IMAGE_HEIGHT = 400
-IMAGE_WIDTH = 400
-
-import time
 
 
 def get_date_time_str() -> str:
@@ -90,14 +83,14 @@ if __name__ == "__main__":
     if not os.path.exists(save_dir):
       os.makedirs(save_dir)
     
-    IMG_H = 256
-    IMG_W = 256
+    IMAGE_HEIGHT = 256
+    IMAGE_WIDTH = 256
     NUM_CLASSES = 2
     BATCH_SIZE = 8
     LEARNING_RATE = 0.001
     EPOCHS = 10
 
-    dl = DataLoader(img_h=IMG_H, img_w=IMG_W, num_classes=NUM_CLASSES)
+    dl = DataLoader(img_h=IMAGE_HEIGHT, img_w=IMAGE_WIDTH, num_classes=NUM_CLASSES)
 
     train_file_path = '/workspace/training_custom/train.txt'
     val_file_path = '/workspace/training_custom/val.txt'
@@ -106,7 +99,7 @@ if __name__ == "__main__":
     ds_train, ds_val, ds_test = dl.get_all_datasets(train_file=train_file_path, \
                                                     val_file=val_file_path)
     ds_train = ds_train.shuffle(buffer_size=10)
-    # ds_train = ds_train.map(augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
+    ds_train = ds_train.map(augment, num_parallel_calls=tf.data.experimental.AUTOTUNE)
     ds_train = ds_train.batch(BATCH_SIZE)
     ds_train = ds_train.prefetch(64)
 
@@ -117,8 +110,8 @@ if __name__ == "__main__":
 
     # print(ds_train)
     # sys.exit()
-    # model, base_model = Models.get_efficientnet_model(IMAGE_HEIGHT=IMG_H, IMAGE_WIDTH=IMG_W, NumClasses=NUM_CLASSES, LEARNING_RATE=LEARNING_RATE)
-    model = Models.get_alexnet(IMAGE_HEIGHT=IMG_H, IMAGE_WIDTH=IMG_W, NumClasses=NUM_CLASSES, LEARNING_RATE=LEARNING_RATE)
+    # model, base_model = Models.get_efficientnet_model(IMAGE_HEIGHT=IMAGE_HEIGHT, IMAGE_WIDTH=IMAGE_WIDTH, NumClasses=NUM_CLASSES, LEARNING_RATE=LEARNING_RATE)
+    model = Models.get_alexnet(IMAGE_HEIGHT=IMAGE_HEIGHT, IMAGE_WIDTH=IMAGE_WIDTH, NumClasses=NUM_CLASSES, LEARNING_RATE=LEARNING_RATE)
     model.summary()
 
     # logpath = os.path.join(save_dir, "efficientnet", "b2", model.name, get_date_time_str())
