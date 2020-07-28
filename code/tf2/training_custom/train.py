@@ -115,7 +115,7 @@ if __name__ == "__main__":
     model.summary()
 
     # logpath = os.path.join(save_dir, "efficientnet", "b2", model.name, get_date_time_str())
-    logpath = os.path.join(save_dir, "Alexnet", "b2", model.name, get_date_time_str())
+    logpath = os.path.join(save_dir, "Alexnet", model.name, get_date_time_str())
     if not os.path.exists(logpath):
         os.makedirs(logpath)
 

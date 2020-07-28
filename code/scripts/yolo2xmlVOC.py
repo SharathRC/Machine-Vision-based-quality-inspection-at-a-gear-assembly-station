@@ -91,9 +91,10 @@ def convert_file(f):
     write_xml_data(data, path)
 
 def start():
-    path = '../../volumes/images'
+    path = '../../volumes/added_background/incomplete'
     for f in glob.glob(f"{path}/*.jpg"):
         convert_file(f)
+    print('done')
 
 
 start()
