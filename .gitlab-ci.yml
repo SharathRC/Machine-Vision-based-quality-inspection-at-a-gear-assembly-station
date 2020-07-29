@@ -20,6 +20,7 @@ test-build-images:
     #   - master
     stage: train
     script:
-        - ./ci/train.sh
+        - cd "ci"
+        - train.sh
     only:
         - development
