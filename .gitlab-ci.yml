@@ -4,7 +4,7 @@ stages:
 before_script:
     # - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker login -u cmx8665 -p Hh4J9a58MwPEhARtRxCg collaborating.tuhh.de:5005
-    - chmod +x ./ci/train.sh && ./ci/train.sh
+    - chmod +x ./ci/train.sh
 
 test-build-images:
     #stage: test
