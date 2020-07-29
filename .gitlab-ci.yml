@@ -18,6 +18,6 @@ test-build-images:
 
     stage: train
     script:
-       - ls 'D:/ml_workspace'
+       - chmod +x ./ci/train.sh && ./ci/train.sh
     only:
        - development
