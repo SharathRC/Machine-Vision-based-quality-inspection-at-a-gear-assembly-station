@@ -3,15 +3,21 @@ before_script:
     - docker login -u cmx8665 -p Hh4J9a58MwPEhARtRxCg collaborating.tuhh.de:5005
 
 test-build-images:
-    stage: test
+    #stage: test
+    #script:
+    #   # - apt-get update -y
+    #    - docker-compose -f code/darknet/build/docker-compose.yml build --no-cache
+    #    # - docker-compose -f code/tf-obj-api/build/docker-compose.yml build --no-cache
+    #    - docker-compose -f code/tf2/build/docker-compose.yml build --no-cache
+    #    
+    #    - docker-compose -f code/darknet/build/docker-compose.yml push
+    #    # - docker-compose -f code/tf-obj-api/build/docker-compose.yml push
+    #    - docker-compose -f code/tf2/build/docker-compose.yml push
+    #only:
+    #   - master
+
+    stage: train
     script:
-       # - apt-get update -y
-        - docker-compose -f code/darknet/build/docker-compose.yml build --no-cache
-        # - docker-compose -f code/tf-obj-api/build/docker-compose.yml build --no-cache
-        - docker-compose -f code/tf2/build/docker-compose.yml build --no-cache
-        
-        - docker-compose -f code/darknet/build/docker-compose.yml push
-        # - docker-compose -f code/tf-obj-api/build/docker-compose.yml push
-        - docker-compose -f code/tf2/build/docker-compose.yml push
+       - ls "D:\ml_workspace"
     only:
-       - master
+       - development
