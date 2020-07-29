@@ -13,5 +13,5 @@ test-build-images:
         - docker-compose -f code/darknet/build/docker-compose.yml push
         # - docker-compose -f code/tf-obj-api/build/docker-compose.yml push
         - docker-compose -f code/tf2/build/docker-compose.yml push
-    # only:
-    #    - master
+    only:
+       - master
