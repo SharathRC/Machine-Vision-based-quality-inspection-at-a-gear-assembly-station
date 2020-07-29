@@ -15,9 +15,8 @@ test-build-images:
     #    - docker-compose -f code/tf2/build/docker-compose.yml push
     #only:
     #   - master
-
     stage: train
     script:
-       - chmod +x ./ci/train.sh && ./ci/train.sh
+        - chmod +x ./ci/train.sh && ./ci/train.sh
     only:
-       - development
+        - development
