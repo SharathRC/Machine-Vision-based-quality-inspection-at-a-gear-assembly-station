@@ -33,4 +33,5 @@ RUN pip3 install --upgrade \
     numpy \
     opencv-python \
     tensorflow_datasets \
-    scipy
+    scipy \
+    pandas

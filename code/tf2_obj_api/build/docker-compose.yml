@@ -1,0 +1,14 @@
+# version: "3.7"
+version: '2.3'
+services:
+  tf2-obj-api:
+    image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf2-obj-api:latest
+    build:
+      context: ../
+      dockerfile: ./build/tf2-obj-api.Dockerfile
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ../training_custom/:/tensorflow/workspace/training_custom
+      - ../../../volumes/add_background/:/tensorflow/workspace/training_custom/images
+    runtime: nvidia
+    command: sleep infinity

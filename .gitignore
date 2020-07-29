@@ -15,3 +15,8 @@
 
 code/tf2/training_custom/weights/*
 */__pycache__/*
+
+checkpoint
+*.meta
+*.pb
+*.data*
