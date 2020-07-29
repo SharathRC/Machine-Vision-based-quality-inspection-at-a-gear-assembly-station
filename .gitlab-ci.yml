@@ -21,6 +21,9 @@ test-build-images:
     stage: train
     script:
         - echo 'Test'
-        - sh /ci/train.sh
+        - cd "D:"
+        - cd "ml_workspace"
+        - dir
+
     only:
         - development
