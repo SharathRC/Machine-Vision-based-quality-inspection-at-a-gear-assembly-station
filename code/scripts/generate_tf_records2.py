@@ -123,8 +123,8 @@ def create_tf_example(group, path):
 
 
 def main(_):
-    dataset = 'test'
-    dataset = 'train'
+    data_set = 'test'
+    data_set = 'train'
     output_path = f'/scripts/{data_set}.record'
     image_dir = f'/images'
     xml_dir = image_dir
