@@ -31,6 +31,20 @@ services:
         runtime: nvidia
         command: sleep infinity
     
+    tf2-obj-api:
+        image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf2-obj-api:latest
+        # build:
+        #     context: ../
+        #     dockerfile: ./code/tf2-obj-api/build/tf2-obj-api.Dockerfile
+        environment:
+            - PYTHONPATH=:/tensorflow/models/research:/tensorflow/models/research/slim
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - ../code/tf2-obj-api/training_custom/:/tensorflow/workspace/training_custom
+            - ../volumes/added_background/:/tensorflow/workspace/training_custom/images
+        runtime: nvidia
+        command: sleep infinity
+    
     pytorch:
         image: collaborating.tuhh.de:5005/cmx8665/master-thesis/pytorch:latest
         # build:

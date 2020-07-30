@@ -2,16 +2,19 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom
 import glob
 import cv2
+import os
 
-
+os.chdir(os.path.dirname(__file__))
 class_names = ['complete', 'incomplete']
 
 def get_param_from_yolo(img_file):
+    img_file = img_file.replace('\\', '/')
     path = "/".join(img_file.split('/')[0:-1])
     txt_file = img_file.split('/')[-1].split('.')[0]
-    img_name = img_file.split('/')[-1]
     txt_file = path + '/' + txt_file + '.txt'
 
+    img_name = img_file.split('/')[-1]
+    folder_name = img_file.split('/')[-2]
     img = cv2.imread(img_file)
     img_h, img_w, img_d = img.shape
 
@@ -27,7 +30,7 @@ def get_param_from_yolo(img_file):
         y_min = int(y_c - 0.5 * h)
         x_max = int(x_min + w)
         y_max = int(y_min + h)
-    return ['images', img_name, img_w, img_h, img_d, class_name, x_min, y_min, x_max, y_max]
+    return [folder_name, img_name, img_w, img_h, img_d, class_name, x_min, y_min, x_max, y_max]
 
 def write_xml_data(data, path):
     node_root = ET.Element('annotation')
@@ -91,8 +94,8 @@ def convert_file(f):
     write_xml_data(data, path)
 
 def start():
-    path = '../../volumes/added_background/incomplete'
-    for f in glob.glob(f"{path}/*.jpg"):
+    path = '../../volumes/added_background'
+    for f in glob.glob(f"{path}/*/*.jpg"):
         convert_file(f)
     print('done')
 
