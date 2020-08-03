@@ -94,32 +94,37 @@ tf.enable_v2_behavior()
 
 FLAGS = flags.FLAGS
 
-flags.DEFINE_string('input_type', 'image_tensor', 'Type of input node. Can be '
-                    'one of [`image_tensor`, `encoded_image_string_tensor`, '
-                    '`tf_example`, `float_image_tensor`]')
-flags.DEFINE_string('pipeline_config_path', None,
-                    'Path to a pipeline_pb2.TrainEvalPipelineConfig config '
-                    'file.')
-flags.DEFINE_string('trained_checkpoint_dir', None,
-                    'Path to trained checkpoint directory')
-flags.DEFINE_string('output_directory', None, 'Path to write outputs.')
-flags.DEFINE_string('config_override', '',
-                    'pipeline_pb2.TrainEvalPipelineConfig '
-                    'text proto to override pipeline_config_path.')
+# flags.DEFINE_string('input_type', 'image_tensor', 'Type of input node. Can be '
+#                     'one of [`image_tensor`, `encoded_image_string_tensor`, '
+#                     '`tf_example`, `float_image_tensor`]')
+# flags.DEFINE_string('pipeline_config_path', None,
+#                     'Path to a pipeline_pb2.TrainEvalPipelineConfig config '
+#                     'file.')
+# flags.DEFINE_string('trained_checkpoint_dir', None,
+#                     'Path to trained checkpoint directory')
+# flags.DEFINE_string('output_directory', None, 'Path to write outputs.')
+# flags.DEFINE_string('config_override', '',
+#                     'pipeline_pb2.TrainEvalPipelineConfig '
+#                     'text proto to override pipeline_config_path.')
 
-flags.mark_flag_as_required('pipeline_config_path')
-flags.mark_flag_as_required('trained_checkpoint_dir')
-flags.mark_flag_as_required('output_directory')
+# flags.mark_flag_as_required('pipeline_config_path')
+# flags.mark_flag_as_required('trained_checkpoint_dir')
+# flags.mark_flag_as_required('output_directory')
 
+
+pipeline_config_path = '/content/drive/My Drive/Tensorflow/workspace/training_custom/models/my_ssd_resnet50_v1_fpn/pipeline.config'
+trained_checkpoint_dir = '/content/drive/My Drive/Tensorflow/workspace/training_custom/models/my_ssd_resnet50_v1_fpn'
+output_directory = '/content/drive/My Drive/Tensorflow/workspace/training_custom/exported-models'
+input_type = 'image_tensor'
+config_override = ''
 
 def main(_):
   pipeline_config = pipeline_pb2.TrainEvalPipelineConfig()
-  with tf.io.gfile.GFile(FLAGS.pipeline_config_path, 'r') as f:
+  with tf.io.gfile.GFile(pipeline_config_path, 'r') as f:
     text_format.Merge(f.read(), pipeline_config)
-  text_format.Merge(FLAGS.config_override, pipeline_config)
+  text_format.Merge(config_override, pipeline_config)
   exporter_lib_v2.export_inference_graph(
-      FLAGS.input_type, pipeline_config, FLAGS.trained_checkpoint_dir,
-      FLAGS.output_directory)
+      input_type, pipeline_config, trained_checkpoint_dir, output_directory)
 
 
 if __name__ == '__main__':

@@ -71,7 +71,7 @@ from object_detection import model_lib_v2
 # FLAGS = flags.FLAGS
 
 
-pipeline_config_path = '/content/drive/My Drive/Tensorflow/workspace/training_custom//models/my_ssd_resnet50_v1_fpn/pipeline.config'
+pipeline_config_path = '/content/drive/My Drive/Tensorflow/workspace/training_custom/models/my_ssd_resnet50_v1_fpn/pipeline.config'
 model_dir = '/content/drive/My Drive/Tensorflow/workspace/training_custom/models/my_ssd_resnet50_v1_fpn'
 num_train_steps = 10000
 sample_1_of_n_eval_examples = 1
