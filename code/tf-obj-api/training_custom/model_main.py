@@ -62,14 +62,17 @@ FLAGS = flags.FLAGS
 
 
 def main(unused_argv):
-  flags.mark_flag_as_required('model_dir')
-  flags.mark_flag_as_required('pipeline_config_path')
-  config = tf.estimator.RunConfig(model_dir=FLAGS.model_dir)
+  model_dir = 'training/ssd_inception_v2_coco/'
+  pipeline_config_path = 'training/ssd_inception_v2_coco/pipeline.config'
+
+  # flags.mark_flag_as_required('model_dir')
+  # flags.mark_flag_as_required('pipeline_config_path')
+  config = tf.estimator.RunConfig(model_dir=model_dir)
 
   train_and_eval_dict = model_lib.create_estimator_and_inputs(
       run_config=config,
       hparams=model_hparams.create_hparams(FLAGS.hparams_overrides),
-      pipeline_config_path=FLAGS.pipeline_config_path,
+      pipeline_config_path=pipeline_config_path,
       train_steps=FLAGS.num_train_steps,
       sample_1_of_n_eval_examples=FLAGS.sample_1_of_n_eval_examples,
       sample_1_of_n_eval_on_train_examples=(

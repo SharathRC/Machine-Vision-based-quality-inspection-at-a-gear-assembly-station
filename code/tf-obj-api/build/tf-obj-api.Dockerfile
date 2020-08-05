@@ -49,7 +49,17 @@ RUN python3 setup.py install
 
 RUN pip3 install pandas
 
-RUN cd
+WORKDIR /
+RUN git clone https://github.com/cocodataset/cocoapi.git
+
+WORKDIR /cocoapi/PythonAPI
+RUN make
+RUN cp -r pycocotools /tensorflow/models/research/
+
+WORKDIR /
+RUN pip3 install \
+    scipy
+
 RUN mkdir -p /tensorflow/workspace/training_custom
 WORKDIR /tensorflow/workspace/training_custom
 # RUN mkdir annotations

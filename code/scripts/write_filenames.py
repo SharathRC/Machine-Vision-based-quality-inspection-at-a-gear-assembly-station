@@ -46,30 +46,30 @@ shuffle(trainfiles)
 shuffle(valfiles)
 shuffle(testfiles)
 
-# add_path = '/darknet/custom/images/'
+add_path = '/darknet/custom/images/'
 # add_path = '/workspace/training_custom/images/'
 # add_path = '/content/drive/My Drive/images/'
 # add_path = '../../volumes/images/'
-add_path = ''
+# add_path = ''
 # write_path = '../../volumes/'
-write_path = ''
+# write_path = ''
 # write_path = 'finetune_alexnet_with_tensorflow/gear_objects/'
-# write_path = '../darknet/custom/'
+write_path = '../darknet/custom/'
 
 with open(f'{write_path}train.txt', 'w') as f:
     for filename in trainfiles:
-        # class_id = int(filename.split('_')[0])
-        # f.write(f'{add_path}/{CLASS_NAMES[class_id]}/{filename}\n')
-        f.write(f'{add_path}{filename}\n')
+        class_id = int(filename.split('_')[0])
+        f.write(f'{add_path}{CLASS_NAMES[class_id]}/{filename}\n')
+        # f.write(f'{add_path}{filename}\n')
 
 with open(f'{write_path}val.txt', 'w') as f:
     for filename in valfiles:
-        # class_id = int(filename.split('_')[0])
-        # f.write(f'{add_path}/{CLASS_NAMES[class_id]}/{filename}\n')
-        f.write(f'{add_path}{filename}\n')
+        class_id = int(filename.split('_')[0])
+        f.write(f'{add_path}{CLASS_NAMES[class_id]}/{filename}\n')
+        # f.write(f'{add_path}{filename}\n')
 
 with open(f'{write_path}test.txt', 'w') as f:
     for filename in testfiles:
-        # class_id = int(filename.split('_')[0])
-        # f.write(f'{add_path}/{CLASS_NAMES[class_id]}/{filename}\n')
-        f.write(f'{add_path}{filename}\n')
+        class_id = int(filename.split('_')[0])
+        f.write(f'{add_path}{CLASS_NAMES[class_id]}/{filename}\n')
+        # f.write(f'{add_path}{filename}\n')

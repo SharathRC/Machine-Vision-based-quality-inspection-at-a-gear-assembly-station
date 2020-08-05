@@ -4,24 +4,24 @@ version: '2.3'
 services:
     darknet:
         image: collaborating.tuhh.de:5005/cmx8665/master-thesis/darknet:latest
-        # build:
-        #     context: ../
-        #     dockerfile: ./code/darknet/build/darknet.Dockerfile
+        build:
+            context: ../
+            dockerfile: ./code/darknet/build/darknet.Dockerfile
         environment:
             - "QT_X11_NO_MITSHM=1"
             - "DISPLAY"
         volumes:
             - /tmp/.X11-unix:/tmp/.X11-unix:rw
             - ../code/darknet/custom/:/darknet/custom
-            - ../volumes/images/:/darknet/custom/images
+            - ../volumes/added_background/:/darknet/custom/images
         runtime: nvidia
         command: sleep infinity
 
     tf-obj-api:
         image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf-obj-api:latest
-        # build:
-        #     context: ../
-        #     dockerfile: ./code/tf-obj-api/build/tf-obj-api.Dockerfile
+        build:
+            context: ../
+            dockerfile: ./code/tf-obj-api/build/tf-obj-api.Dockerfile
         environment:
             - PYTHONPATH=:/tensorflow/models/research:/tensorflow/models/research/slim
         volumes:
@@ -30,12 +30,13 @@ services:
             - ../volumes/added_background/:/tensorflow/workspace/training_custom/images
         runtime: nvidia
         command: sleep infinity
+        # command: /bin/bash -c "cd /tensorflow/workspace/training_custom; python model_main.py --alsologtostderr"
     
     tf2-obj-api:
         image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf2-obj-api:latest
-        # build:
-        #     context: ../
-        #     dockerfile: ./code/tf2-obj-api/build/tf2-obj-api.Dockerfile
+        build:
+            context: ../
+            dockerfile: ./code/tf2-obj-api/build/tf2-obj-api.Dockerfile
         environment:
             - PYTHONPATH=:/tensorflow/models/research:/tensorflow/models/research/slim
         volumes:
@@ -47,9 +48,9 @@ services:
     
     pytorch:
         image: collaborating.tuhh.de:5005/cmx8665/master-thesis/pytorch:latest
-        # build:
-        #     context: ../
-        #     dockerfile: ./code/pytorch/build/pytorch.Dockerfile
+        build:
+            context: ../
+            dockerfile: ./code/pytorch/build/pytorch.Dockerfile
         environment:
             - "QT_X11_NO_MITSHM=1"
             - "DISPLAY"
@@ -61,9 +62,9 @@ services:
 
     tf2:
         image: collaborating.tuhh.de:5005/cmx8665/master-thesis/tf2:latest
-        # build:
-        #     context: ../
-        #     dockerfile: ./code/tf2/build/tf2.Dockerfile
+        build:
+            context: ../
+            dockerfile: ./code/tf2/build/tf2.Dockerfile
         environment:
             - "QT_X11_NO_MITSHM=1"
             - "DISPLAY"
