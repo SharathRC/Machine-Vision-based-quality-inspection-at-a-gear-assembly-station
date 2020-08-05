@@ -1,4 +1,5 @@
 FROM tensorflow/tensorflow:1.15.0-gpu-py3
+# FROM tensorflow/tensorflow:1.14.0-gpu-py3
 ARG DEBIAN_FRONTEND=noninteractive
 
 # install dependencies

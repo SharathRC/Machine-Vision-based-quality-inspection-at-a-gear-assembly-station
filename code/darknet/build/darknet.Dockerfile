@@ -1,4 +1,5 @@
 FROM nvidia/cuda:10.0-cudnn7-devel
+# FROM nvidia/cuda:9.0-cudnn7-devel
 ARG DEBIAN_FRONTEND=noninteractive
 
 # install dependencies
