@@ -14,8 +14,10 @@ from __future__ import absolute_import
 
 import os
 import io
-import pandas as pd
+import glob
 import tensorflow as tf
+import pandas as pd
+import xml.etree.ElementTree as ET
 import sys
 sys.path.append("../../models/research")
 
@@ -44,7 +46,7 @@ def xml_to_csv(path, image_list):
 
     xml_list = []
     for xml_file in glob.glob(path + '/*/*.xml'):
-        filename = xml_file.split('.')[0]
+        filename = xml_file.split('/')[-1].split('\\')[-1].split('.')[0]
         if filename in image_list:
             tree = ET.parse(xml_file)
             root = tree.getroot()
@@ -126,7 +128,7 @@ def create_tf_example(group, path):
 
 
 def main():
-    data_set = 'test'
+    data_set = 'train'
     # data_set = 'train'
     output_path = f'/tensorflow/workspace/training_custom/annotations/{data_set}.record'
     image_dir = f'/tensorflow/workspace/training_custom/images'
@@ -139,15 +141,13 @@ def main():
         for image_name in f.readlines():
             image_name = image_name.split('.')[0]
             image_list.append(image_name)
-    
     writer = tf.python_io.TFRecordWriter(output_path)
-    path = os.path.join(image_dir)
 
     examples = xml_to_csv(xml_dir, image_list)
     grouped = split(examples, 'filename')
     
     for group in grouped:
-        class_id = group.filename.split("_")[0]
+        class_id = int(group.filename.split("_")[0])
         path = f'{image_dir}/{class_names[class_id]}'
         tf_example = create_tf_example(group, path)
         writer.write(tf_example.SerializeToString())

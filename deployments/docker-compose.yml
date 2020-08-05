@@ -27,7 +27,7 @@ services:
         volumes:
             - /tmp/.X11-unix:/tmp/.X11-unix:rw
             - ../code/tf-obj-api/training_custom/:/tensorflow/workspace/training_custom
-            - ../volumes/images/:/tensorflow/workspace/training_custom/images
+            - ../volumes/added_background/:/tensorflow/workspace/training_custom/images
         runtime: nvidia
         command: sleep infinity
     
